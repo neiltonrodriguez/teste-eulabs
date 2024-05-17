@@ -18,7 +18,7 @@ var (
 	errProductNotFound = errors.New("product not found")
 )
 
-func GetAll(ctx context.Context) ([]domain.Product, error) {
+func GetAll(ctx context.Context) ([]domain.ProductDTO, error) {
 	var err error
 	Db, err = database.ConnectToDB()
 	if err != nil {
@@ -29,7 +29,7 @@ func GetAll(ctx context.Context) ([]domain.Product, error) {
 	SELECT 
 		id, 
 		name, 
-		COALESCE('description', ''), 
+		description, 
 		value, 
 		created_at, 
 		updated_at 
@@ -39,9 +39,9 @@ func GetAll(ctx context.Context) ([]domain.Product, error) {
 	}
 	defer rows.Close()
 
-	var products []domain.Product
+	var products []domain.ProductDTO
 	for rows.Next() {
-		var product domain.Product
+		var product domain.ProductDTO
 		err := rows.Scan(
 			&product.Id,
 			&product.Name,
@@ -58,11 +58,11 @@ func GetAll(ctx context.Context) ([]domain.Product, error) {
 	return products, nil
 }
 
-func Create(ctx echo.Context, u *domain.Product) (domain.Product, error) {
+func Create(ctx echo.Context, u *domain.Product) (domain.ProductDTO, error) {
 	var err error
 	Db, err = database.ConnectToDB()
 	if err != nil {
-		return domain.Product{}, err
+		return domain.ProductDTO{}, err
 	}
 	u.Id = uuid.Must(uuid.NewRandom()).String()
 
@@ -70,7 +70,7 @@ func Create(ctx echo.Context, u *domain.Product) (domain.Product, error) {
 
 	_, err = Db.ExecContext(ctx.Request().Context(), query, u.Id, u.Name, u.Description, u.Value)
 	if err != nil {
-		return domain.Product{}, err
+		return domain.ProductDTO{}, err
 	}
 	defer Db.Close()
 
@@ -82,33 +82,33 @@ func Create(ctx echo.Context, u *domain.Product) (domain.Product, error) {
 	return product, nil
 }
 
-func GetById(ctx context.Context, id string) (domain.Product, error) {
+func GetById(ctx context.Context, id string) (domain.ProductDTO, error) {
 	var err error
 	Db, err = database.ConnectToDB()
 	if err != nil {
-		return domain.Product{}, err
+		return domain.ProductDTO{}, err
 	}
 
 	rows, err := Db.Query(`
 	SELECT
 	    id, 
 		name, 
-		COALESCE('description', ''), 
+		description, 
 		value, 
 		created_at, 
 		updated_at  
 	FROM eulabs.products WHERE id = ? limit 1`, id)
 	if err != nil {
-		return domain.Product{}, err
+		return domain.ProductDTO{}, err
 	}
 
 	defer rows.Close()
 
 	rowExist := rows.Next()
 	if !rowExist {
-		return domain.Product{}, errProductNotFound
+		return domain.ProductDTO{}, errProductNotFound
 	}
-	var product domain.Product
+	var product domain.ProductDTO
 	err = rows.Scan(
 		&product.Id,
 		&product.Name,
@@ -117,7 +117,7 @@ func GetById(ctx context.Context, id string) (domain.Product, error) {
 		&product.CreatedAt,
 		&product.UpdatedAt)
 	if err != nil {
-		return domain.Product{}, err
+		return domain.ProductDTO{}, err
 	}
 
 	return product, nil

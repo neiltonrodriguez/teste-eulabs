@@ -14,8 +14,10 @@ type Product struct {
 }
 
 type ProductDTO struct {
-	Id          int     `json:"id"`
-	Name        string  `json:"name"`
-	Description string  `json:"description"`
-	Value       float64 `json:"value"`
+	Id          string     `json:"id"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	Value       float64   `json:"value"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
