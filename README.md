@@ -12,22 +12,6 @@ Golang 1.21.3
 Echo Framework
 ```
 
-#### se não tiver workbech instalado, pode usar o endereço do phpMyadmin para acessar o banco:
-```
-# PhpMyAdmin: http://localhost:8888/ 
-# execute o script sql que está dentro de ./script-sql/model.sql para criar as tabelas
-```
-
-#### se tiver workbech acesse o banco depois de executar o docker com esses dados:
-```
-Host: 127.0.0.1:3306
-User: user
-Password: password
-Database: eulabs
-
-# execute o script sql que está dentro de ./script-sql/model.sql para criar as tabelas
-```
-
 ## Executar localmente via docker
 use:
 ```
@@ -42,16 +26,24 @@ se der conflito com a porta 3306, pare o seu serviço mysql, ou mude a porta no 
 # sudo service mysqld stop
 ou
 # sudo /etc/init.d/mysqld stop
+
+o docker se encarregará de instalar todas as dependências do projeto, incluindo o Go e Mysql
 ```
 
-## Executar localmente (precisar ter o Go e Mysql + workbench Instalado)
-use:
+#### se não tiver workbech instalado, pode usar o endereço do phpMyadmin para acessar o banco:
 ```
-# clone o projeto, (git clone https://github.com/neiltonrodriguez/teste-eulabs)
-# acesse a pasta do projeto (cd teste-eulabs)
-# go mod vendor
-# go mod tidy
-#go run .\main.go
+# PhpMyAdmin: http://localhost:8888/ 
+# execute o script sql que está dentro de ./script-sql/model.sql para criar as tabelas
+```
+
+#### se tiver workbech acesse o banco depois de executar o docker com esses dados:
+```
+Host: 127.0.0.1:3306
+User: user
+Password: password
+Database: eulabs
+
+# execute o script sql que está dentro de ./script-sql/model.sql para criar as tabelas
 ```
 
 
