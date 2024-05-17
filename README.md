@@ -12,16 +12,31 @@ Golang 1.21.3
 Echo Framework
 ```
 
-
-## Executar localmente
-na primeira vez, use:
+#### se não tiver workbech instalado, pode usar o endereço do phpMyadmin para acessar o banco:
 ```
+# PhpMyAdmin: http://localhost:8888/ 
+# execute o script sql que está dentro de ./script-sql/model.sql para criar as tabelas
+```
+
+#### se tiver workbech acesse o banco depois de executar o docker com esses dados:
+```
+Host: 127.0.0.1:3306
+User: user
+Password: password
+Database: eulabs
+
+# execute o script sql que está dentro de ./script-sql/model.sql para criar as tabelas
+```
+
+## Executar localmente via docker
+use:
+```
+# clone o projeto, (git clone https://github.com/neiltonrodriguez/teste-eulabs)
+# acesse a pasta do projeto (cd teste-eulabs)
 # docker-compose up -d --build
 # renomei o arquivo .env-example para .env
-# acesse o phpMyAdmin em(http://localhost:8888/) e execute o script sql que está dentro de ./script-sql/model.sql para criar as tabelas
+
 ```
-
-
 se der conflito com a porta 3306, pare o seu serviço mysql, ou mude a porta no Dockerfile
 ```
 # sudo service mysqld stop
@@ -29,17 +44,18 @@ ou
 # sudo /etc/init.d/mysqld stop
 ```
 
-
-##  Rotas
+## Executar localmente (precisar ter o Go e Mysql + workbench Instalado)
+use:
 ```
-GET: http://localhost:8080/product/
-GET: http://localhost:8080/product/:id
-POST: http://localhost:8080/product/
-PUT: http://localhost:8080/product/:id
-DELETE: http://localhost:8080/product/:id
-
+# clone o projeto, (git clone https://github.com/neiltonrodriguez/teste-eulabs)
+# acesse a pasta do projeto (cd teste-eulabs)
+# go mod vendor
+# go mod tidy
+#go run .\main.go
 ```
 
+
+##  Rotas e Modelo de requisição:
 cURL create:
 ```
 curl --request POST \
@@ -78,13 +94,6 @@ cURL Delete:
 ```
 curl --request DELETE \
   --url http://localhost:8080/product/709a470b-75f3-4038-a752-477bcbdc4607
-```
-
-
-#### endereços para acesso:
-```
-PhpMyAdmin: http://localhost:8888/
-Endereço da api: http://localhost:8080/
 ```
 
 Developed by Neilton Rodrigues
