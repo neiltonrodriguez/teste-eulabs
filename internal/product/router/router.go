@@ -7,7 +7,6 @@ import (
 )
 
 func RegisterRoutes(e *echo.Echo) {
-
 	g := e.Group("/product")
 
 	g.GET("/", handler.GetAll).Name = "get-all"

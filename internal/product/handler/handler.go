@@ -2,33 +2,47 @@ package handler
 
 import (
 	"eulabs/domain"
-	"fmt"
+	ProductModel "eulabs/models/product"
 	"net/http"
 
 	"github.com/labstack/echo"
 )
 
 func GetAll(c echo.Context) error {
-	return c.String(http.StatusOK, "get all")
+	products, err := ProductModel.GetAll(c.Request().Context())
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, products)
 }
 
 func GetById(c echo.Context) error {
 	id := c.Param("id")
-	// team := c.QueryParam("team")
-	return c.String(http.StatusOK, fmt.Sprintf("get by id, id: %s", id))
+	product, err := ProductModel.GetById(c.Request().Context(), id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	return c.JSON(http.StatusOK, product)
 }
 
 func Create(c echo.Context) error {
-	u := new(domain.Product)
-	if err := c.Bind(u); err != nil {
-		return err
+	payload := new(domain.Product)
+	err := c.Bind(payload)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	u, err := ProductModel.Create(c, payload)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	return c.JSON(http.StatusCreated, u)
 }
 
 func Update(c echo.Context) error {
-	return c.String(http.StatusOK, "update")
+	return echo.NewHTTPError(http.StatusBadRequest, "Erro ao tentar atualizar dados")
 }
 
 func Delete(c echo.Context) error {

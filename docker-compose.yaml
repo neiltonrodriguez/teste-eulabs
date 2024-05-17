@@ -1,0 +1,54 @@
+version: '3.5'
+services:
+  app:
+    container_name: teste-eulabs
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    networks:
+      - eulabs-network
+    ports:
+      - 8080:8080
+    depends_on:
+      - mysql
+
+  mysql:
+    container_name: eulabs-mysql
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    tty: true
+    volumes:
+      - eulabs-data:/var/lib/mysql/
+      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - eulabs-network
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_DATABASE: eulabs
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+
+  phpmyadmin:
+      container_name: eulabs-phpmyadmin
+      image: phpmyadmin:5.2
+      restart: always
+      ports:
+        - '8888:80'
+      networks:
+        - eulabs-network
+      environment:
+        PMA_HOST: eulabs-mysql
+      depends_on:
+        - mysql
+
+networks:
+  eulabs-network:
+    driver: bridge
+
+volumes:
+  eulabs-data:
+    driver: local
