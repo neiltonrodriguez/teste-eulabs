@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-type Product struct {
+type ProductInputDTO struct {
 	Id          string    `json:"id"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
@@ -13,7 +13,7 @@ type Product struct {
 	UpdatedAt   time.Time `json:"updated_at"`
 }
 
-type ProductDTO struct {
+type ProductOutputDTO struct {
 	Id          string     `json:"id"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`

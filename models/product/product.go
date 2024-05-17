@@ -18,7 +18,7 @@ var (
 	errProductNotFound = errors.New("product not found")
 )
 
-func GetAll(ctx context.Context) ([]domain.ProductDTO, error) {
+func GetAll(ctx context.Context) ([]domain.ProductOutputDTO, error) {
 	var err error
 	Db, err = database.ConnectToDB()
 	if err != nil {
@@ -39,9 +39,9 @@ func GetAll(ctx context.Context) ([]domain.ProductDTO, error) {
 	}
 	defer rows.Close()
 
-	var products []domain.ProductDTO
+	var products []domain.ProductOutputDTO
 	for rows.Next() {
-		var product domain.ProductDTO
+		var product domain.ProductOutputDTO
 		err := rows.Scan(
 			&product.Id,
 			&product.Name,
@@ -58,23 +58,23 @@ func GetAll(ctx context.Context) ([]domain.ProductDTO, error) {
 	return products, nil
 }
 
-func Create(ctx echo.Context, u *domain.Product) (domain.ProductDTO, error) {
+func Create(ctx echo.Context, input *domain.ProductInputDTO) (domain.ProductOutputDTO, error) {
 	var err error
 	Db, err = database.ConnectToDB()
 	if err != nil {
-		return domain.ProductDTO{}, err
+		return domain.ProductOutputDTO{}, err
 	}
-	u.Id = uuid.Must(uuid.NewRandom()).String()
+	input.Id = uuid.Must(uuid.NewRandom()).String()
 
 	query := `INSERT INTO eulabs.products (id, name, description, value, created_at, updated_at) VALUES(?, ?, ?, ?, NOW(), NOW())`
 
-	_, err = Db.ExecContext(ctx.Request().Context(), query, u.Id, u.Name, u.Description, u.Value)
+	_, err = Db.ExecContext(ctx.Request().Context(), query, input.Id, input.Name, input.Description, input.Value)
 	if err != nil {
-		return domain.ProductDTO{}, err
+		return domain.ProductOutputDTO{}, err
 	}
 	defer Db.Close()
 
-	product, err := GetById(ctx.Request().Context(), u.Id)
+	product, err := GetById(ctx.Request().Context(), input.Id)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -82,11 +82,11 @@ func Create(ctx echo.Context, u *domain.Product) (domain.ProductDTO, error) {
 	return product, nil
 }
 
-func GetById(ctx context.Context, id string) (domain.ProductDTO, error) {
+func GetById(ctx context.Context, id string) (domain.ProductOutputDTO, error) {
 	var err error
 	Db, err = database.ConnectToDB()
 	if err != nil {
-		return domain.ProductDTO{}, err
+		return domain.ProductOutputDTO{}, err
 	}
 
 	rows, err := Db.Query(`
@@ -99,16 +99,16 @@ func GetById(ctx context.Context, id string) (domain.ProductDTO, error) {
 		updated_at  
 	FROM eulabs.products WHERE id = ? limit 1`, id)
 	if err != nil {
-		return domain.ProductDTO{}, err
+		return domain.ProductOutputDTO{}, err
 	}
 
 	defer rows.Close()
 
 	rowExist := rows.Next()
 	if !rowExist {
-		return domain.ProductDTO{}, errProductNotFound
+		return domain.ProductOutputDTO{}, errProductNotFound
 	}
-	var product domain.ProductDTO
+	var product domain.ProductOutputDTO
 	err = rows.Scan(
 		&product.Id,
 		&product.Name,
@@ -117,13 +117,13 @@ func GetById(ctx context.Context, id string) (domain.ProductDTO, error) {
 		&product.CreatedAt,
 		&product.UpdatedAt)
 	if err != nil {
-		return domain.ProductDTO{}, err
+		return domain.ProductOutputDTO{}, err
 	}
 
 	return product, nil
 }
 
-func Update(ctx context.Context, payload *domain.Product, id string) error {
+func Update(ctx context.Context, input *domain.ProductInputDTO, id string) error {
 	var err error
 	Db, err = database.ConnectToDB()
 	if err != nil {
@@ -138,7 +138,7 @@ func Update(ctx context.Context, payload *domain.Product, id string) error {
 		value = ?
 	WHERE id = ?`
 
-	_, err = Db.ExecContext(ctx, query, payload.Name, payload.Description, payload.Value, id)
+	_, err = Db.ExecContext(ctx, query, input.Name, input.Description, input.Value, id)
 	if err != nil {
 		return err
 	}

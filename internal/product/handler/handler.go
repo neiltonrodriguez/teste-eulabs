@@ -37,7 +37,7 @@ func GetById(c echo.Context) error {
 }
 
 func Create(c echo.Context) error {
-	payload := new(domain.Product)
+	payload := new(domain.ProductInputDTO)
 	err := c.Bind(payload)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
@@ -58,7 +58,7 @@ func Create(c echo.Context) error {
 
 func Update(c echo.Context) error {
 	id := c.Param("id")
-	payload := new(domain.Product)
+	payload := new(domain.ProductInputDTO)
 	err := c.Bind(payload)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
