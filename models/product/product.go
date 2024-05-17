@@ -123,4 +123,46 @@ func GetById(ctx context.Context, id string) (domain.Product, error) {
 	return product, nil
 }
 
+func Update(ctx context.Context, payload *domain.Product, id string) error {
+	var err error
+	Db, err = database.ConnectToDB()
+	if err != nil {
+		return err
+	}
 
+	query := `
+	UPDATE eulabs.products
+	SET 
+		name = ?, 
+		description = ?, 
+		value = ?
+	WHERE id = ?`
+
+	_, err = Db.ExecContext(ctx, query, payload.Name, payload.Description, payload.Value, id)
+	if err != nil {
+		return err
+	}
+
+	defer Db.Close()
+
+	return nil
+}
+
+func Delete(ctx context.Context, id string) error {
+	var err error
+	Db, err = database.ConnectToDB()
+	if err != nil {
+		return err
+	}
+
+	query := `DELETE FROM eulabs.products WHERE id = ?`
+
+	_, err = Db.ExecContext(ctx, query, id)
+	if err != nil {
+		return err
+	}
+
+	defer Db.Close()
+
+	return nil
+}

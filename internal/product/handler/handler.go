@@ -14,7 +14,12 @@ func GetAll(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, products)
+	return c.JSON(http.StatusOK, domain.Response{
+		Meta: domain.Meta{
+			Count: len(products),
+		},
+		Data: products,
+	})
 }
 
 func GetById(c echo.Context) error {
@@ -23,7 +28,12 @@ func GetById(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	return c.JSON(http.StatusOK, product)
+	return c.JSON(http.StatusOK, domain.Response{
+		Meta: domain.Meta{
+			Count: 1,
+		},
+		Data: product,
+	})
 }
 
 func Create(c echo.Context) error {
@@ -33,18 +43,49 @@ func Create(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	u, err := ProductModel.Create(c, payload)
+	product, err := ProductModel.Create(c, payload)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	return c.JSON(http.StatusCreated, u)
+	return c.JSON(http.StatusOK, domain.Response{
+		Meta: domain.Meta{
+			Count: 1,
+		},
+		Data: product,
+	})
 }
 
 func Update(c echo.Context) error {
-	return echo.NewHTTPError(http.StatusBadRequest, "Erro ao tentar atualizar dados")
+	id := c.Param("id")
+	payload := new(domain.Product)
+	err := c.Bind(payload)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	err = ProductModel.Update(c.Request().Context(), payload, id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	return c.JSON(http.StatusOK, domain.Response{
+		Meta: domain.Meta{
+			Count: 1,
+		},
+		Data: "success",
+	})
 }
 
 func Delete(c echo.Context) error {
-	return c.String(http.StatusOK, "delete")
+	id := c.Param("id")
+	err := ProductModel.Delete(c.Request().Context(), id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	return c.JSON(http.StatusOK, domain.Response{
+		Meta: domain.Meta{
+			Count: 1,
+		},
+		Data: "success",
+	})
 }
