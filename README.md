@@ -1,16 +1,15 @@
-# API-PERSONAL-FINANCE
-### Api criada para fins de estudo e prática
+# TESTE EULABS
+### CRUD de produtos
 
 ### Descrição
-api voltada para controle de movimentações financeiras cotidianas, como entradas e saídas(gastos e ganhos)
+uma simples api para CRUD de produtos, usando golang e mysql
 
 ### Contexto de negócio
 ```
 Docker
 MySql
-Golang
-Fiber
-JWT token
+Golang 1.21.3
+Echo Framework
 ```
 
 
@@ -19,7 +18,7 @@ na primeira vez, use:
 ```
 # docker-compose up -d --build
 # renomei o arquivo .env-example para .env
-# acesse o phpMyAdmin em(http://localhost:8888/) e execute o script sql que está dentro de ./sql/bd.sql para criar as tabelas
+# acesse o phpMyAdmin em(http://localhost:8888/) e execute o script sql que está dentro de ./script-sql/model.sql para criar as tabelas
 ```
 
 
@@ -28,23 +27,31 @@ se faltar alguma dependência use o compose install dentro do container
 # docker exec setup-php composer install
 ```
 
-## Autenticação
+
+##  Rotas
 ```
-Bearer Token: 
+GET: http://localhost:8080/product/
+GET: http://localhost:8080/product/:id
+POST: http://localhost:8080/product/
+PUT: http://localhost:8080/product/:id
+DELETE: http://localhost:8080/product/:id
+
 ```
 
-
-##  Rotas não autenticadas
+payload para create e update:
 ```
-POST: http://localhost:8080/api/v1/login
-POST: http://localhost:8080/api/v1/user
+{
+  "name": "nome do produto",
+  "description": "descrição produto",
+  "value": 59.99
+}
 ```
 
 
 #### endereços para acesso:
 ```
 PhpMyAdmin: http://localhost:8888/
-Endereço da api: http://localhost:8080/api/v1/
+Endereço da api: http://localhost:8080/
 ```
 
 Developed by Neilton Rodrigues
