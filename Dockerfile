@@ -10,11 +10,13 @@ RUN go mod tidy
 
 RUN go mod download
 
-COPY *.go ./
+# COPY *.go ./
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
+WORKDIR /app/cmd
+
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o /app/main .
 
 FROM alpine:latest  
 

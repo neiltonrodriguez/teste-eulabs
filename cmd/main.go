@@ -1,9 +1,9 @@
 package main
 
 import (
-	"eulabs/common"
-	"eulabs/domain"
-	ProductRouter "eulabs/internal/product/router"
+	"eulabs/config"
+	Router "eulabs/internal/router"
+	"eulabs/pkg/common"
 	"net/http"
 
 	"github.com/rs/zerolog/log"
@@ -18,9 +18,9 @@ func main() {
 	e := echo.New()
 	common.NewLogger()
 	e.Use(common.LoggingMiddleware)
-	domain.GlobalConfig.LoadVariables()
+	config.GlobalConfig.LoadVariables()
 
-	ProductRouter.RegisterRoutes(e)
+	Router.RegisterRoutes(e)
 	if err := e.Start(":8080"); err != http.ErrServerClosed {
 		log.Error().Msg("Error message: " + err.Error())
 	}

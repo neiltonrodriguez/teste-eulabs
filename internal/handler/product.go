@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"eulabs/common"
-	"eulabs/domain"
-	ProductModel "eulabs/models/product"
+	"eulabs/internal/domain"
+	Model "eulabs/internal/model"
+	"eulabs/pkg/common"
 	"net/http"
 
 	"github.com/labstack/echo"
@@ -11,7 +11,7 @@ import (
 )
 
 func GetAll(c echo.Context) error {
-	products, err := ProductModel.GetAll(c.Request().Context())
+	products, err := Model.GetAll(c.Request().Context())
 	if err != nil {
 		log.Error().Msg("Error in GetAll of product: " + err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
@@ -28,7 +28,7 @@ func GetAll(c echo.Context) error {
 
 func GetById(c echo.Context) error {
 	id := c.Param("id")
-	product, err := ProductModel.GetById(c.Request().Context(), id)
+	product, err := Model.GetById(c.Request().Context(), id)
 	if err != nil {
 		log.Error().Msg("Error in GetById of product: " + err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
@@ -51,7 +51,7 @@ func Create(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	product, err := ProductModel.Create(c, payload)
+	product, err := Model.Create(c, payload)
 	if err != nil {
 		log.Error().Msg("Error in Create: " + err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
@@ -75,7 +75,7 @@ func Update(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	err = ProductModel.Update(c.Request().Context(), payload, id)
+	err = Model.Update(c.Request().Context(), payload, id)
 	if err != nil {
 		log.Error().Msg("Error in Update: " + err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
@@ -92,7 +92,7 @@ func Update(c echo.Context) error {
 
 func Delete(c echo.Context) error {
 	id := c.Param("id")
-	err := ProductModel.Delete(c.Request().Context(), id)
+	err := Model.Delete(c.Request().Context(), id)
 	if err != nil {
 		log.Error().Msg("Error in Delete: " + err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())

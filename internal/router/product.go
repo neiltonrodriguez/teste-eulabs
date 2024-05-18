@@ -1,7 +1,7 @@
 package router
 
 import (
-	"eulabs/internal/product/handler"
+	"eulabs/internal/handler"
 
 	"github.com/labstack/echo"
 )

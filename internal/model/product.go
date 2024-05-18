@@ -1,11 +1,11 @@
-package user
+package model
 
 import (
 	"context"
 	"database/sql"
 	"errors"
-	"eulabs/database"
-	"eulabs/domain"
+	"eulabs/internal/domain"
+	"eulabs/pkg/database"
 	"log"
 
 	"github.com/google/uuid"
