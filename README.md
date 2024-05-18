@@ -33,7 +33,7 @@ o docker se encarregará de instalar todas as dependências do projeto, incluind
 #### se não tiver workbech instalado, pode usar o endereço do phpMyadmin para acessar o banco:
 ```
 # PhpMyAdmin: http://localhost:8888/ 
-# execute o script sql que está dentro de ./script-sql/model.sql para criar as tabelas
+# execute o script sql que está dentro de ./docs/model.sql para criar as tabelas
 ```
 
 #### se tiver workbech acesse o banco depois de executar o docker com esses dados:
@@ -74,7 +74,7 @@ curl --request GET \
 cURL Update:
 ```
 curl --request PUT \
-  --url http://localhost:8080/product/9d89ea02-d84a-46c5-ba50-de89fd237e52 \
+  --url http://localhost:8080/product/:id \
   --data '{
   "name": "Notebook i7",
   "description": "teste de produto lenovo",
@@ -85,7 +85,7 @@ curl --request PUT \
 cURL Delete:
 ```
 curl --request DELETE \
-  --url http://localhost:8080/product/709a470b-75f3-4038-a752-477bcbdc4607
+  --url http://localhost:8080/product/:id
 ```
 
 Developed by Neilton Rodrigues
