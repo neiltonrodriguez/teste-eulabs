@@ -51,6 +51,10 @@ func Create(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
+	if err = c.Validate(payload); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
 	product, err := Model.Create(c, payload)
 	if err != nil {
 		log.Error().Msg("Error in Create: " + err.Error())
@@ -72,6 +76,10 @@ func Update(c echo.Context) error {
 	err := c.Bind(payload)
 	if err != nil {
 		log.Error().Msg("bind error in update: " + err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if err = c.Validate(payload); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
