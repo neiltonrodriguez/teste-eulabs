@@ -10,8 +10,6 @@ RUN go mod tidy
 
 RUN go mod download
 
-# COPY *.go ./
-
 COPY . .
 
 WORKDIR /app/cmd
